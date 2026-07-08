@@ -58,7 +58,10 @@ exports.createTour = async (req, res) => {
 exports.updateTour = async (req, res) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      // new: true returns the newly updated document rather than the original one before the update
       new: true,
+      // runValidators: true is needed because Mongoose does NOT run validations 
+      // (like 'required' or 'maxLength' defined in the schema) on update by default.
       runValidators: true,
     });
 
