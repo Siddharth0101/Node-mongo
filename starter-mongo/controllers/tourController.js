@@ -1,8 +1,18 @@
-const Tour = require('./../models/tourModel');
+const Tour = require('../models/tourModel');
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    const queryObj = { ...req.query };
+    const excludedFields = ['page', 'limit', 'sort', 'fields'];
+    excludedFields.forEach((ele) => delete queryObj[ele]);
+
+    // 1B) Advanced filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    const query = Tour.find(JSON.parse(queryStr));
+
+    const tours = await query;
 
     res.status(200).json({
       status: 'success',
@@ -14,7 +24,7 @@ exports.getAllTours = async (req, res) => {
   } catch (err) {
     res.status(404).json({
       status: 'fail',
-      message: err,
+      message: err.message,
     });
   }
 };
@@ -32,7 +42,7 @@ exports.getTour = async (req, res) => {
   } catch (err) {
     res.status(404).json({
       status: 'fail',
-      message: err,
+      message: err.message,
     });
   }
 };
@@ -50,7 +60,7 @@ exports.createTour = async (req, res) => {
   } catch (err) {
     res.status(400).json({
       status: 'fail',
-      message: err,
+      message: err.message,
     });
   }
 };
@@ -60,7 +70,7 @@ exports.updateTour = async (req, res) => {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
       // new: true returns the newly updated document rather than the original one before the update
       new: true,
-      // runValidators: true is needed because Mongoose does NOT run validations 
+      // runValidators: true is needed because Mongoose does NOT run validations
       // (like 'required' or 'maxLength' defined in the schema) on update by default.
       runValidators: true,
     });
@@ -74,7 +84,7 @@ exports.updateTour = async (req, res) => {
   } catch (err) {
     res.status(404).json({
       status: 'fail',
-      message: err,
+      message: err.message,
     });
   }
 };
@@ -90,7 +100,7 @@ exports.deleteTour = async (req, res) => {
   } catch (err) {
     res.status(404).json({
       status: 'fail',
-      message: err,
+      message: err.message,
     });
   }
 };

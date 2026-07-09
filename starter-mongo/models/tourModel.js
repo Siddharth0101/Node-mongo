@@ -5,24 +5,24 @@ const tourSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A tour must have a name'],
     unique: true,
-    trim: true
+    trim: true,
   },
   rating: {
     type: Number,
-    default: 4.5
+    default: 4.5,
   },
   price: {
     type: Number,
-    required: [true, 'A tour must have a price']
+    required: [true, 'A tour must have a price'],
   },
   difficulty: {
     type: String,
-    required: [true, 'A tour must have a difficulty']
+    required: [true, 'A tour must have a difficulty'],
   },
   createdAt: {
     type: Date,
-    default: Date.now()
-  }
+    default: Date.now(),
+  },
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
