@@ -127,8 +127,8 @@ exports.getTourStats = async (req, res) => {
         },
       },
       {
-        $sort: { avgRating: -1 }
-      }
+        $sort: { avgRating: -1 },
+      },
     ]);
     res.status(200).json({
       status: 'success',
