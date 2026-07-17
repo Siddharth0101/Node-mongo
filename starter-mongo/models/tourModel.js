@@ -9,9 +9,15 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'A tour must have a name'],
       unique: true,
       trim: true,
-      maxlength: [40, 'A tour name must have less than or equal to 40 characters'],
-      minlength: [10, 'A tour name must have more than or equal to 10 characters'],
-      validate: [validator.isAlpha, 'tour name must only contain characters']
+      maxlength: [
+        40,
+        'A tour name must have less than or equal to 40 characters',
+      ],
+      minlength: [
+        10,
+        'A tour name must have more than or equal to 10 characters',
+      ],
+      validate: [validator.isAlpha, 'tour name must only contain characters'],
     },
     slug: String,
     rating: {
@@ -47,8 +53,8 @@ const tourSchema = new mongoose.Schema(
     },
     secretTour: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -63,16 +69,16 @@ tourSchema.virtual('newprice').get(function () {
 });
 
 tourSchema.pre('save', function () {
-  this.slug = slugify(this.name, { lower: true })
-})
+  this.slug = slugify(this.name, { lower: true });
+});
 
 tourSchema.pre(/^find/, function () {
-  this.find({ secretTour: { $ne: true } })
-})
+  this.find({ secretTour: { $ne: true } });
+});
 
 tourSchema.pre('aggregate', function () {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } })
-})
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+});
 
 const Tour = mongoose.model('Tour', tourSchema);
 
