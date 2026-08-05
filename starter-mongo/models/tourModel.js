@@ -153,30 +153,27 @@ tourSchema.virtual('reviews', {
 });
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
-tourSchema.pre('save', function (next) {
+tourSchema.pre('save', function () {
   this.slug = slugify(this.name, { lower: true });
-  next();
 });
 
 // QUERY MIDDLEWARE
 // Runs before any find query — filter out secret tours
-tourSchema.pre(/^find/, function (next) {
+tourSchema.pre(/^find/, function () {
   this.find({ secretTour: { $ne: true } });
   this.start = Date.now();
-  next();
 });
 
 // Populate guides on any find query
-tourSchema.pre(/^find/, function (next) {
+tourSchema.pre(/^find/, function () {
   this.populate({
     path: 'guides',
     select: '-__v -passwordChangedAt',
   });
-  next();
 });
 
 // AGGREGATION MIDDLEWARE
-tourSchema.pre('aggregate', function (next) {
+tourSchema.pre('aggregate', function () {
   // Only add $match if the first stage is not $geoNear
   // ($geoNear must be the first stage in the pipeline)
   if (
@@ -185,7 +182,6 @@ tourSchema.pre('aggregate', function (next) {
   ) {
     this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
   }
-  next();
 });
 
 const Tour = mongoose.model('Tour', tourSchema);

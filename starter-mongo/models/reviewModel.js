@@ -40,12 +40,11 @@ reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
 
 // QUERY MIDDLEWARE
 // Populate user data on any find query
-reviewSchema.pre(/^find/, function (next) {
+reviewSchema.pre(/^find/, function () {
   this.populate({
     path: 'user',
     select: 'name photo',
   });
-  next();
 });
 
 // STATIC METHOD to calculate average ratings for a tour
