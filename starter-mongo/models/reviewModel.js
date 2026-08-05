@@ -84,7 +84,12 @@ reviewSchema.post('save', function () {
 });
 
 // Calculate average ratings after findOneAndUpdate or findOneAndDelete
-// In Mongoose 7+, findOneAndUpdate/findOneAndDelete have their own query middleware
+// NOTE (Jonas Course vs Modern Mongoose):
+// In Jonas's course (Mongoose 5), he used a 2-step trick because post-hooks didn't have access to the document:
+//   reviewSchema.pre(/^findOneAnd/, async function(next) { this.r = await this.findOne(); });
+//   reviewSchema.post(/^findOneAnd/, async function() { await this.r.constructor.calcAverageRatings(this.r.tour); });
+//
+// In modern Mongoose (v6+ / v9), `post(/^findOneAnd/)` receives the updated/deleted `doc` directly as an argument:
 reviewSchema.post(/^findOneAnd/, async function (doc) {
   // doc is the document that was found and updated/deleted
   if (doc) {

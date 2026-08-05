@@ -157,6 +157,21 @@ tourSchema.pre('save', function () {
   this.slug = slugify(this.name, { lower: true });
 });
 
+/*
+// CODE FROM LESSON: "Modelling Tour Guides: Embedding"
+// (Jonas demonstrates embedding user documents inside tours when creating a new tour)
+// Requires: const User = require('./userModel');
+//
+// tourSchema.pre('save', async function () {
+//   const guidesPromises = this.guides.map(async id => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromises);
+// });
+//
+// WHY IT WAS REPLACED IN NEXT LESSON ("Modelling Tour Guides: Child Referencing"):
+// Embedding guides means if a guide updates their email/role/name, the embedded tour data
+// becomes outdated. So Jonas switched to Child Referencing (using ref: 'User' and .populate()).
+*/
+
 // QUERY MIDDLEWARE
 // Runs before any find query — filter out secret tours
 tourSchema.pre(/^find/, function () {
