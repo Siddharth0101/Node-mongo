@@ -16,6 +16,28 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
+/*
+// LESSON: "Populating Tour Guides"
+// Before adding Query Middleware (`pre(/^find/)`) in tourModel.js and using factory handlers,
+// Jonas initially manually populated guides inside getTour like this:
+//
+// exports.getTour = catchAsync(async (req, res, next) => {
+//   const tour = await Tour.findById(req.params.id).populate({
+//     path: 'guides',
+//     select: '-__v -passwordChangedAt'
+//   });
+//   if (!tour) return next(new AppError('No tour found with that ID', 404));
+//   res.status(200).json({ status: 'success', data: { tour } });
+// });
+
+// BEFORE REFACTORING TO HANDLER FACTORY (handlerFactory.js):
+// exports.deleteTour = catchAsync(async (req, res, next) => {
+//   const tour = await Tour.findByIdAndDelete(req.params.id);
+//   if (!tour) return next(new AppError('No tour found with that ID', 404));
+//   res.status(204).json({ status: 'success', data: null });
+// });
+*/
+
 exports.getAllTours = factory.getAll(Tour);
 // Populate reviews when getting a single tour (virtual populate)
 exports.getTour = factory.getOne(Tour, { path: 'reviews' });
